@@ -40,7 +40,7 @@ function executarMenu(){
             alterarLivro();
             break;                
         case "5":
-            pesquisarLivro();
+            filtrarLivros();
             break;                
         default:
             break;
@@ -48,20 +48,78 @@ function executarMenu(){
 }
 
 function cadastrarLivro(){
+    let codigo = prompt('Digite o Código do livro');
+    while (getLivro(codigo)!=null) {
+        codigo = prompt('Código já utilizado, tente outro');
+    }
+    let titulo = prompt('Digite o Nome do livro');
+    let categoria = prompt('Digite a categoria do livro');
+    let livro = {
+        codigo:codigo,
+        titulo:titulo,
+        categoria:categoria,
+        };
+    baseDeLivros.push(livro);
     executarMenu();
 };
 
 function pesquisarLivro(){
+    let livro = lerCodigoLivro();
+    if(livro!=null){
+        apresentarLivro(livro);
+    }
     executarMenu();
+
 };
+
+function apresentarLivro(livro){
+    alert(`Livro:
+                Código: ${livro.codigo}
+                Nome: ${livro.titulo}
+                Categoria ${livro.categoria}`);
+}
+
+function getLivro(codigo){
+    return baseDeLivros.find(x=>x.codigo==codigo);
+}
 
 function excluirLivro(){
+    let livro = lerCodigoLivro();
+    if(livro!=null){
+        baseDeLivros.splice(livro,1);
+    }
     executarMenu();
 };
 
+function lerCodigoLivro(){
+    let codigo = prompt('Digite o Código do livro');
+    let livro = getLivro(codigo);
+    if(livro==null){
+        alert('Livro não encontrado');
+    }
+    return livro;
+}
+
 function alterarLivro(){
+    let livro = lerCodigoLivro();
+    if(livro!=null){
+        let titulo = prompt(`Digite o Nome do livro ${livro.titulo}`);
+        let categoria = prompt(`Digite a categoria do livro ${livro.categoria}`);
+        
+        baseDeLivros.forEach(x => {
+            if(x.codigo==livro.codigo){
+                x.titulo = titulo;
+                x.categoria = categoria;
+            }
+        });
+    }
     executarMenu();
 };
+
+function filtrarLivros(){
+        let categoria = prompt(`Digite a categoria do livro`);  
+        baseDeLivros.filter(x=>x.categoria==categoria).forEach(x=>apresentarLivro(x));    
+}
 
 
 executarMenu();
